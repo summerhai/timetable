@@ -13,4 +13,10 @@ public class MD5 {
         return new Md5Hash(str,newSalt).toString() ;
     }
 
+    public static void main(String[] args){
+        String password = "112358";
+        password = md5(password);
+        System.out.println(password);
+    }
+
 }

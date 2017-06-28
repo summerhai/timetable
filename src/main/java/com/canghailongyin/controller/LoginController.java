@@ -1,35 +1,41 @@
 package com.canghailongyin.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.canghailongyin.service.UserService;
 import com.canghailongyin.utils.MD5;
+import com.canghailongyin.utils.ResponseUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by mingyue on 2017/6/27.
  */
-@RestController
+@Controller
 public class LoginController {
+    private static final String SESSION_USER_KEY = "currentUser";
 
     /**
      * 用户登录
      */
     @RequestMapping(value="/login", method= RequestMethod.POST)
-    public String login(HttpServletRequest request){
-        String resultPageURL = InternalResourceViewResolver.FORWARD_URL_PREFIX + "/";
+    public String login(HttpServletRequest request, HttpServletResponse response){
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         password = MD5.md5(password);
+        JSONObject flag = new JSONObject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         token.setRememberMe(true);
         System.out.println("为了验证登录用户而封装的token为" + ReflectionToStringBuilder.toString(token, ToStringStyle.MULTI_LINE_STYLE));
@@ -42,32 +48,53 @@ public class LoginController {
             System.out.println("对用户[" + username + "]进行登录验证..验证开始");
             currentUser.login(token);
             System.out.println("对用户[" + username + "]进行登录验证..验证通过");
-            resultPageURL = "main";
         }catch(UnknownAccountException uae){
             System.out.println("对用户[" + username + "]进行登录验证..验证未通过,未知账户");
-            request.setAttribute("message_login", "未知账户");
+            flag.put("flag",false);
+            flag.put("error","账户名不存在");
         }catch(IncorrectCredentialsException ice){
             System.out.println("对用户[" + username + "]进行登录验证..验证未通过,错误的凭证");
-            request.setAttribute("message_login", "密码不正确");
+            flag.put("flag",false);
+            flag.put("error","密码错误");
         }catch(LockedAccountException lae){
             System.out.println("对用户[" + username + "]进行登录验证..验证未通过,账户已锁定");
-            request.setAttribute("message_login", "账户已锁定");
+            flag.put("flag",false);
+            flag.put("error","账户已锁定");
         }catch(ExcessiveAttemptsException eae){
             System.out.println("对用户[" + username + "]进行登录验证..验证未通过,错误次数过多");
-            request.setAttribute("message_login", "用户名或密码错误次数过多");
+            flag.put("flag",false);
+            flag.put("error","密码错误次数过多");
         }catch(AuthenticationException ae){
             //通过处理Shiro的运行时AuthenticationException就可以控制用户登录失败或密码错误时的情景
             System.out.println("对用户[" + username + "]进行登录验证..验证未通过,堆栈轨迹如下");
             ae.printStackTrace();
-            request.setAttribute("message_login", "用户名或密码不正确");
+            flag.put("flag",false);
+            flag.put("error",ae.getMessage());
         }
         //验证是否登录成功
         if(currentUser.isAuthenticated()){
+            Session session = currentUser.getSession();
+            //对Session进行管理
+            flag.put("flag",true);
             System.out.println("用户[" + username + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
         }else{
             token.clear();
+            if(!flag.containsKey("flag")){
+                flag.put("flag",false);
+            }
+            if(!flag.containsKey("error")){
+                flag.put("error","登陆认证错误");
+            }
         }
-        return resultPageURL;
+
+        ResponseUtils.setResponseHeaders(response);
+        ResponseUtils.sendJSONData(response, flag.toString());
+        return null;
+    }
+
+    @RequestMapping(value="/main")
+    public String main(HttpServletRequest request, HttpServletResponse response){
+        return "main";
     }
 
 

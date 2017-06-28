@@ -22,9 +22,9 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link rel="alternate icon" type="image/png" href="module/amazeui/assets/i/favicon.png">
-    <link rel="stylesheet" href="module/amazeui/assets/css/amazeui.min.css"/>
-    <link rel="stylesheet" type="text/css" href="module/sweetalert/dist/sweetalert.css">
+    <link rel="alternate icon" type="image/png" href="static/amazeui/assets/i/favicon.png">
+    <link rel="stylesheet" href="static/amazeui/assets/css/amazeui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/sweetalert/dist/sweetalert.css">
     <style>
         .header {
             text-align: center;
@@ -59,7 +59,7 @@
         <br>
         <br>
 
-        <form method="post" class="am-form">
+        <div class="am-form">
             <label for="username">账户编号:</label>
             <input type="text" name="" id="username" value="">
             <br>
@@ -75,14 +75,14 @@
                 <input type="submit" name="" id="loginButton" value="登 录" class="am-btn am-btn-primary am-btn-sm am-fl">
                 <input type="submit" name="" value="忘记密码 ^_^? " class="am-btn am-btn-default am-btn-sm am-fr">
             </div>
-        </form>
+        </div>
         <hr>
         <p>© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
     </div>
 </div>
-<script type="text/javascript" src="module/jquery/jquery-1.8.3.min.js"> </script>
-<script type="text/javascript" src="module/layer/layer.js"> </script>
-<script type="text/javascript" src="module/script/login/login.js"> </script>
+<script type="text/javascript" src="static/jquery/jquery-1.8.3.min.js"> </script>
+<script type="text/javascript" src="static/layer/layer.js"> </script>
+<script type="text/javascript" src="static/script/login/login.js"> </script>
 
 </body>
 </html>

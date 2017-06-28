@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.canghailongyin.dao.UserDAO">
+    <resultMap id="BaseResultMap" type="com.canghailongyin.pojo.User">
+        <id column="u_id" property="u_id" jdbcType="INTEGER"/>
+        <result column="u_account" property="u_account" jdbcType="VARCHAR"/>
+        <result column="u_password" property="u_password" jdbcType="VARCHAR"/>
+        <result column="u_create_time" property="u_create_time" jdbcType="CHAR"/>
+        <result column="u_available" property="u_available" jdbcType="INTEGER"/>
+        <result column="role" property="role" jdbcType="CHAR"/>
+        <result column="u_type_id" property="u_type_id" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        u_id, u_account, u_password, u_create_time, u_available, role, u_type_id
+    </sql>
+
+    <select id="selectUserByID" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select <include refid="Base_Column_List"/>
+        from user
+        where u_id = #{u_id,jdbcType=INTEGER} and u_available = 1
+    </select>
+
+    <select id="selectUserByAccount" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select <include refid="Base_Column_List"/>
+        from user
+        where u_account = #{u_account,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectAllUsers" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select <include refid="Base_Column_List"/>
+        from user
+        where u_available = 1 order by u_create_time DESC
+    </select>
+
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete
+        from user
+        where u_id = #{u_id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insertUser" parameterType="com.canghailongyin.pojo.User">
+        insert into
+        user (u_account, u_password, u_create_time, u_available, role, u_type_id)
+        values (#{u_account,jdbcType=VARCHAR}, #{u_password,jdbcType=VARCHAR},
+          #{u_create_time,jdbcType=CHAR}, #{u_available,jdbcType=INTEGER}, #{role,jdbcType=CHAR},
+          #{u_type_id,jdbcType=INTEGER})
+    </insert>
+
+    <update id="updateUser" parameterType="com.canghailongyin.pojo.User">
+        update user
+        set u_account = #{u_account,jdbcType=VARCHAR},
+          u_password = #{u_password,jdbcType=VARCHAR},
+          u_create_time = #{u_create_time,jdbcType=CHAR},
+          u_available = #{u_available,jdbcType=INTEGER},
+          role = #{role,jdbcType=CHAR},
+          u_type_id = #{u_type_id,jdbcType=INTEGER}
+        where u_id = #{u_id,jdbcType=INTEGER}
+    </update>
+
+    <update id="disableUser" parameterType="java.lang.Integer">
+        update user
+        set u_available = 0
+        where u_id = #{u_id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

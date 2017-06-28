@@ -22,7 +22,10 @@ public class RelamFilter extends AuthorizingRealm {
         String loginName = (String) principalCollection.fromRealm(getName()).iterator().next();
         //到数据库查是否有此对象
         User user = userService.getUserByAccount(loginName);
-        if (user != null && user.getU_available() != 0) {
+        if (user != null) {
+            if(user.getU_available() != 1){
+                throw new AuthenticationException("该账号已被禁用");
+            }
             //权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
             //用户的角色集合
@@ -45,10 +48,21 @@ public class RelamFilter extends AuthorizingRealm {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         //查出是否有此用户
         User user = userService.getUserByAccount(token.getUsername());
-        if (user != null && user.getU_available() != 0) {
+        if (user != null) {
+            if(user.getU_available() != 1){
+                throw new AuthenticationException("该账号已被禁用");
+            }
             //若存在，将此用户存放到登录认证info中
             return new SimpleAuthenticationInfo(user.getU_account(), user.getU_password(), getName());
         }
         return null;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

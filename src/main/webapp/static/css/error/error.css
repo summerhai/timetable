@@ -1,0 +1,15 @@
+*{ padding:0px; margin:0px;}
+body{ font-family: Microsoft YaHei , SimSun , SimHei; color:#393939;}
+#error{ margin:0px auto; width:450px;}
+#error .content {background:url(../images/error/error-404.png) no-repeat left center; padding-left:140px;margin-top:180px; height:150px;}
+#error .content .p_t{font-size:28px; padding:5px 0 0 10px;}
+#error .content .p_c{font-family:Arial; font-size:18px; color:#777777; padding:5px 0 0 10px;}
+#error .content .p_c span{ font-weight:bold; font-size:21px; color:#393939; }
+#error .content .p_b{font-size:21px; padding:20px 0 0 10px;}
+
+
+#error .content2 {background:url(../images/error/error-500.png) no-repeat left center; padding-left:140px;margin-top:180px; height:150px;}
+#error .content2 .p_t{font-size:28px; padding:5px 0 0 10px;}
+#error .content2 .p_c{font-family:Arial; font-size:18px; color:#777777; padding:5px 0 0 10px;}
+#error .content2 .p_c span{ font-weight:bold; font-size:21px; color:#393939; }
+#error .content2 .p_b{font-size:21px; padding:20px 0 0 10px;}

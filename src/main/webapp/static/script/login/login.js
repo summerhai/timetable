@@ -17,8 +17,9 @@ function loginCheck() {
     }else if(password == ""){
         layer.msg('密码不能为空', {icon: 5});
     }else{
+        console.log("准备登陆");
         $.ajax({
-            url: CONTEXTPATH+'/login.htm',
+            url: CONTEXTPATH+'/login',
             type: 'POST',
             data: {
                 "username" : userName,
@@ -30,8 +31,7 @@ function loginCheck() {
                 console.log(data);
                 if(data.flag){
                     layer.msg('登录成功', {icon: 1});
-                    location.href=CONTEXTPATH+'/user/main.htm';
-                    //location.href=CONTEXTPATH+'/buildModel/denglitestD3.htm';
+                    location.href=CONTEXTPATH+'/main';
                 }else{
                     layer.msg(data.error, {icon: 5});
                 }
