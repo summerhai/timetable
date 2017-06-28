@@ -52,7 +52,7 @@
         <h3>登录</h3>
         <hr>
         <div class="am-btn-group">
-            <label><input name="userType" type="radio" value="student" />学生 </label>
+            <label><input name="userType" type="radio" value="student" checked/>学生 </label>
             <label><input name="userType" type="radio" value="teacher" />教师 </label>
             <label><input name="userType" type="radio" value="admin" />管理员 </label>
         </div>
@@ -65,6 +65,15 @@
             <br>
             <label for="password">密码:</label>
             <input type="password" name="" id="password" value="">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <img src="/code/captcha-image" id="verify" align="middle" title="看不清，请点我" onclick="refreshVerifyCode()"  style="cursor:hand;height:46px;width:90px"/><br/>
+                </div>
+
+                <div class="col-sm-5">
+                    <input type="text" id="verifyCode" class="form-control" name="verifyCode" placeholder="验证码">
+                </div>
+            </div>
             <br>
             <label for="remember-me">
                 <input id="remember-me" type="checkbox">

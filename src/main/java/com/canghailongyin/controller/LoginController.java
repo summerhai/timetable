@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.canghailongyin.service.UserService;
 import com.canghailongyin.utils.MD5;
 import com.canghailongyin.utils.ResponseUtils;
+import com.google.code.kaptcha.Constants;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.shiro.SecurityUtils;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by mingyue on 2017/6/27.
@@ -31,11 +33,24 @@ public class LoginController {
      */
     @RequestMapping(value="/login", method= RequestMethod.POST)
     public String login(HttpServletRequest request, HttpServletResponse response){
+        JSONObject flag = new JSONObject();
+        String verifyCode = request.getParameter("verifyCode");
+        HttpSession session = request.getSession();
+        String code = (String)session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        //首先校验验证码
+        if(!verifyCode.equals(code))
+        {
+            flag.put("flag",false);
+            flag.put("error","验证码输入有误");
+            ResponseUtils.setResponseHeaders(response);
+            ResponseUtils.sendJSONData(response, flag.toString());
+            return null;
+        }
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         password = MD5.md5(password);
-        JSONObject flag = new JSONObject();
+
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         token.setRememberMe(true);
         System.out.println("为了验证登录用户而封装的token为" + ReflectionToStringBuilder.toString(token, ToStringStyle.MULTI_LINE_STYLE));
@@ -73,7 +88,7 @@ public class LoginController {
         }
         //验证是否登录成功
         if(currentUser.isAuthenticated()){
-            Session session = currentUser.getSession();
+//            Session session = currentUser.getSession();
             //对Session进行管理
             flag.put("flag",true);
             System.out.println("用户[" + username + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
